@@ -32,31 +32,19 @@ languageDef = Token.LanguageDef
     ,   Token.identLetter       = alphaNum <|> oneOf "_'"
     ,   Token.opStart           = Token.opLetter languageDef
     ,   Token.opLetter          = oneOf "`~!@$%^&+-*/=;:<>.?"
-    ,   Token.reservedOpNames   = [".","~","&&", "||","->","<->","forall","exists"]
-    ,   Token.reservedNames     = ["false","true","not","and","or","imp","iff","forall","exists"]
+    ,   Token.reservedOpNames   = [".","~","&&", "||","->","<->"]
+    ,   Token.reservedNames     = ["false","true","not","and","or", "imp","iff"]
     ,   Token.caseSensitive     = True
     }
 
--- construction of the lexer using the lexerStyle parameter-collection
--- () means no user definede state
--- lexer is a collection of lexival parsers
 lexer :: Token.TokenParser ()
 lexer = Token.makeTokenParser languageDef
-
--- extract the lexical parsers from 'lexer'
--- these parsers strip trainling whitespace after tokens
-identifier  :: Parser String
-identifier  = Token.identifier lexer
 reserved    :: String -> Parser ()
 reserved    = Token.reserved lexer
 reservedOp  :: String -> Parser ()
 reservedOp  = Token.reservedOp lexer
 parens      :: Parser a -> Parser a
 parens      = Token.parens lexer
--- integer     :: Parser Integer
--- integer     = Token.integer lexer
--- semi        :: Parser String
--- semi        = Token.semi lexer
 whiteSpace  :: Parser ()
 whiteSpace  = Token.whiteSpace lexer
 
@@ -81,9 +69,7 @@ atom p =
 
 operators :: [[Expr.Operator String () Identity (F.Formula a)]]
 operators =
-    [   [Expr.Prefix (reservedOp "forall"   >> identifier >>= \i -> reservedOp "." >> return (F.Forall i))
-        ,Expr.Prefix (reservedOp "exists"   >> identifier >>= \i -> reservedOp "." >> return (F.Exists i))   ]
-    ,   [Expr.Prefix (reservedOp "~"        >> return F.Not )                                                ]
+    [   [Expr.Prefix (reservedOp "~"        >> return F.Not )                                                ]
     ,   [Expr.Infix  (reservedOp "&&"       >> return F.And )                       Expr.AssocRight          ]
     ,   [Expr.Infix  (reservedOp "||"       >> return F.Or  )                       Expr.AssocRight          ]
     ,   [Expr.Infix  (reservedOp "->"       >> return F.Imp )                       Expr.AssocRight          ]

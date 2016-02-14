@@ -7,7 +7,7 @@
 module Logic.Data.Formula
     (
     -- * Types
-      Formula (False, True, Atom, Not, And, Or, Imp, Iff, Forall, Exists)
+      Formula (False, True, Atom, Not, And, Or, Imp, Iff)
     -- * Term destructor functions
     --
     -- Functions for deconstricting a 'Formula' based on its main connective.
@@ -49,8 +49,6 @@ data Formula a
     | Or (Formula a) (Formula a)
     | Imp (Formula a) (Formula a)
     | Iff (Formula a) (Formula a)
-    | Forall String (Formula a)
-    | Exists String (Formula a)
     deriving (Show, Eq)
 
 {- Term destructor functions -}
@@ -118,8 +116,6 @@ onAtoms f fm = case fm of
     Or p q      -> Or (onAtoms f p) (onAtoms f q)
     Imp p q     -> Imp (onAtoms f p) (onAtoms f q)
     Iff p q     -> Iff (onAtoms f p) (onAtoms f q)
-    Forall x p  -> Forall x $ onAtoms f p
-    Exists x p  -> Forall x $ onAtoms f p
 
 -- | 'onFormulas' applies a function to every subformula of a 'Formula' f.
 onFormulas :: (Formula a -> Formula a) -> Formula a -> Formula a
@@ -132,8 +128,6 @@ onFormulas f fm0 = case fm0 of
     Or  p q     -> Or  (f p) (f q)
     Imp p q     -> Imp (f p) (f q)
     Iff p q     -> Iff (f p) (f q)
-    Forall x p  -> Forall x $ f p
-    Exists x p  -> Exists x $ f p
 
 -- | 'overAtoms' takes a binary function
 -- and applies it to the atoms in a 'Formula' f.
@@ -151,8 +145,6 @@ overAtoms f fm b = case fm of
     Or p q      -> overAtoms f p (overAtoms f q b)
     Imp p q     -> overAtoms f p (overAtoms f q b)
     Iff p q     -> overAtoms f p (overAtoms f q b)
-    Forall _ p  -> overAtoms f p b
-    Exists _ p  -> overAtoms f p b
 
 -- | 'atomSet' returns the set of all atoms in a 'Formula' f.
 atomsSet :: Eq a => Formula a -> [a]
@@ -177,8 +169,6 @@ simSubs subList fm = case fm of
     Or p q          -> Or (simSubs subList p) (simSubs subList q)
     Imp p q         -> Imp (simSubs subList p) (simSubs subList q)
     Iff p q         -> Iff (simSubs subList p) (simSubs subList q)
-    Forall x p      -> Forall x $ simSubs subList p
-    Exists x p      -> Exists x $ simSubs subList p
   where substitution f =
             let substitutions = [ subs | subs@(x,_) <- subList, x == f]
             in if null substitutions

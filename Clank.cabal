@@ -30,6 +30,7 @@ library
                      , containers
                      , parsec
                      , transformers
+                     , QuickCheck
   default-language:    Haskell2010
 
 executable clank
@@ -39,7 +40,7 @@ executable clank
                      , Clank.Data.ShowBox
                      , Clank.Data.Task
                      , Clank.Parser.Task
-  ghc-options:         -threaded -rtsopts -with-rtsopts=-N -Wall
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   build-depends:       base
                      , Clank
                      , containers
@@ -53,6 +54,7 @@ test-suite Clank-test
   main-is:             Spec.hs
   build-depends:       base
                      , Clank
+                     , QuickCheck
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   default-language:    Haskell2010
 

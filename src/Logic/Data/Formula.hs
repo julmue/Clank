@@ -1,5 +1,3 @@
-{-# OPTIONS_GHC -Wall -Werror #-}
-
 -- |
 -- Module: Logic.Data.Formula
 --
@@ -38,6 +36,8 @@ where
 import Prelude hiding (Bool(False,True))
 
 import Data.List
+import Test.QuickCheck.Arbitrary
+import Test.QuickCheck.Gen
 
 -- | The type for formulas.
 data Formula a
@@ -204,3 +204,21 @@ replace = onFormulas
 -- | 'Formula' instance of Functor
 instance Functor Formula where
     fmap = onAtoms
+
+genFormula :: Arbitrary a => Int -> Gen (Formula a)
+genFormula depth
+    | depth <= 1 = oneof [Atom <$> arbitrary, elements [True, False]]
+    | otherwise = do
+        f1 <- genFormula <$> genDepth
+        f2 <- genFormula <$> genDepth
+        oneof [ genFormula 1
+              , Not <$> f1
+              , And <$> f1 <*> f2
+              , Or <$> f1 <*> f2
+              , Imp <$> f1 <*> f2
+              , Iff <$> f1 <*> f2
+              ]
+    where genDepth = elements [1 .. pred depth]
+
+instance Arbitrary a => Arbitrary (Formula a) where
+    arbitrary = sized genFormula

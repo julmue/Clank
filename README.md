@@ -79,8 +79,10 @@ Here are some simple examples (all exmaples use classical propositional calculus
 
     > true
 
-* Check whether `q` implies `p → q` in classical:
+* Check whether `q` implies `p → q`:
 
-    clank -f 'p -> q' 'q' -s pc -ms
+    > clank -f 'p -> q' 'q' -s pc -t
+
+    > True
 
 

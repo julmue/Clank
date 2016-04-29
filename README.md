@@ -15,7 +15,7 @@ Clank is a prover for various systems of paraconsistent propositional logic and 
 
 * PC: Vanilla propositional calculus
 * K3: System Kleen
-* L3: System Lukaszewic
+* L3: System Lucasiewicz
 * LP: System Priest
 * RM: System Routly-Meyer
 

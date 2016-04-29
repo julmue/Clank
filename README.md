@@ -25,14 +25,14 @@ The syntax of the propositional formulas:
 
     Formula = Var 	-- all aplphanumeric strings can be used as identifiers
             | a && b	-- conjunction
-	    | a || b    -- disjunction	
+            | a || b    -- disjunction	
             | a -> b    -- implication
             | a <-> b   -- equivalence
 
 ## Usage
 
 Clank has a command line interface.
-Arguments are devided in *Mandatory Arguments* and *Options*;
+Arguments are devided in *Mandatory Arguments* and *Options*;  
 All mandatory arguments and at least one option have to be provided for a successful query. 
 
 Mandatory arguments are:
